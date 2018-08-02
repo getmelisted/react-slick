@@ -114,3 +114,8 @@ h3 {
   border-radius: 5px;
   min-height: 45px
 }
+
+.slick-prev,
+.slick-next {
+  border-radius: 50%;
+}
