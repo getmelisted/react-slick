@@ -27,6 +27,7 @@ export class PrevArrow extends React.PureComponent {
     let prevArrowProps = {
       key: "0",
       "data-role": "none",
+      tabIndex: "1",
       className: classnames(prevClasses),
       style: { display: "block" },
       onClick: prevHandler
@@ -74,6 +75,7 @@ export class NextArrow extends React.PureComponent {
     let nextArrowProps = {
       key: "1",
       "data-role": "none",
+      tabIndex: "1",
       className: classnames(nextClasses),
       style: { display: "block" },
       onClick: nextHandler
