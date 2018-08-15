@@ -4,6 +4,7 @@ import React from 'react';
 import Slider from '../src/slider';
 
 import SimpleSlider from '../examples/SimpleSlider'
+import MaxSlider from '../examples/MaxSlider'
 import SlideChangeHooks from '../examples/SlideChangeHooks'
 import MultipleItems from '../examples/MultipleItems'
 import MultipleRows from '../examples/MultipleRows'
@@ -37,6 +38,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div className='content'>
+        <MaxSlider />
         <SimpleSlider />
         <MultipleItems />
         <MultipleRows />
