@@ -15,7 +15,8 @@
     "test:watch": "jest --watch",
     "lint": "eslint src",
     "gen": "node examples/scripts/generateExampleConfigs.js && node examples/scripts/generateExamples.js && xdg-open docs/jquery.html",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "postinstall": "npm run build"
   },
   "author": "Kiran Abburi",
   "license": "MIT",
