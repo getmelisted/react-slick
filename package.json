@@ -3,10 +3,6 @@
   "version": "0.23.1",
   "description": " React port of slick carousel",
   "main": "./dist/react-slick.min.js",
-  "files": [
-    "dist",
-    "lib"
-  ],
   "scripts": {
     "start": "gulp server",
     "build": "gulp clean && gulp sass && gulp copy && webpack",
@@ -15,8 +11,7 @@
     "test:watch": "jest --watch",
     "lint": "eslint src",
     "gen": "node examples/scripts/generateExampleConfigs.js && node examples/scripts/generateExamples.js && xdg-open docs/jquery.html",
-    "precommit": "lint-staged",
-    "postinstall": "npm install && npm run build"
+    "precommit": "lint-staged"
   },
   "author": "Kiran Abburi",
   "license": "MIT",
