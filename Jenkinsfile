@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'node:8.11'
+      image 'node:8'
       registryUrl 'https://index.docker.io/v1/'
       registryCredentialsId 'no-credentials'
     }
