@@ -6,6 +6,11 @@ pipeline {
       registryCredentialsId 'no-credentials'
     }
   }
+  options {
+    disableConcurrentBuilds()
+    ansiColor('xterm')
+    timeout(time: 60, unit: 'MINUTES')
+  }
   environment {
     def NPM_CONFIG_CACHE = '/tmp/npm'
     def info = repoInfo()
