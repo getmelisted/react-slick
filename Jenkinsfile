@@ -6,6 +6,15 @@ pipeline {
       registryCredentialsId 'no-credentials'
     }
   }
+  environment {
+    def NPM_CONFIG_CACHE = '/tmp/npm'
+    def info = repoInfo()
+    def ARTIFACTORY_REPO = 'sweetiq-node'
+    def REPORT_FILE= 'junit_report.xml'
+    def BABEL_CACHE_PATH = './.babel.json' 
+    def IS_MASTER_BRANCH_JOB = BRANCH_NAME.equals('master')
+    def IS_PR_JOB = BRANCH_NAME.startsWith('PR-')
+  }
   stages {
     stage('install dependencies') {
       steps {
