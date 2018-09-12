@@ -28,7 +28,7 @@ pipeline {
     }
     stage('test') {
       steps {
-        sh 'npm test && echo "done"'
+        sh 'npm test'
       }
     }
     // stage('publish') {
