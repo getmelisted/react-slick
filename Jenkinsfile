@@ -18,14 +18,14 @@ pipeline {
   stages {
     stage('install dependencies') {
       steps {
-        sh 'npm i -g npm && npm i'
+        sh 'npm i'
       }
     }
-    // stage('test') {
-    //   steps {
-    //     sl 'npm test'
-    //   }
-    // }
+    stage('test') {
+      steps {
+        sh 'npm test'
+      }
+    }
     // stage('publish') {
 
     // }
