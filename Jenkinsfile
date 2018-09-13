@@ -55,7 +55,7 @@ pipeline {
             [path: "/secret/sweetiq-sls/artifactory/API_KEY", keys: ['API_KEY': 'ARTIFACTORY_API_KEY']]
           ]) {
               def node_package = readJSON file: 'package.json'
-
+              
               try {
                 def repo_package_version = sh(script: "npm view --registry=${env.NPM_REGISTRY_URL} ${node_package.name} dist-tags.latest", returnStdout: true).trim()
                 echo "repo_package_version:${repo_package_version}"
@@ -66,14 +66,17 @@ pipeline {
               } catch(Exception e) {
                 sh "echo '${node_package.name} could not be found, most likely the first time it is being pushed to artifactory'"
               }
-              def pkg = sh(script: 'npm pack .', returnStdout: true).trim()
+              def pkg = sh(script: 'npm pack . 2> /dev/null | tail -n 1', returnStdout: true).trim()
 
               // Push to Artifactory
-              paasArtifactory.push apiKey: env.ARTIFACTORY_API_KEY,
+              def success = paasArtifactory.push apiKey: env.ARTIFACTORY_API_KEY,
                   repo: "${env.ARTIFACTORY_REPO}",
                   source: pkg,
                   destination: "react-slick/-/${pkg}"
 
+              if (!success) {
+                error "<${env.BUILD_URL}|#${env.BUILD_TAG}> - [${node_package.name}] Error publishing ${node_package.name}"
+              }
             // Note:  We are skiping the use of the tagging API on this repository, since it is a fork
           }
         }
