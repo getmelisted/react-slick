@@ -56,9 +56,9 @@ pipeline {
           ]) {
               def node_package = readJSON file: 'package.json'
 
-              echo "repo_package_version:${repo_package_version}"
               try {
                 def repo_package_version = sh(script: "npm view --registry=${env.NPM_REGISTRY_URL} ${node_package.name} dist-tags.latest", returnStdout: true).trim()
+                echo "repo_package_version:${repo_package_version}"
                 if (repo_package_version == node_package.version) {
                 env.FAILURE_MESSAGE = "<${env.BUILD_URL}|#${env.BUILD_TAG}> - [${node_package.name}] node_package.version:${node_package.version} already exists in npm repo as repo_package_version:${repo_package_version}. update the version number in package.json"
                 error env.FAILURE_MESSAGE
