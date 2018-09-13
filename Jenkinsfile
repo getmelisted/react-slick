@@ -66,13 +66,17 @@ pipeline {
               } catch(Exception e) {
                 sh "echo '${node_package.name} could not be found, most likely the first time it is being pushed to artifactory'"
               }
-              def pkg = sh(script: 'npm pack .', returnStdout: true).trim()
+              def pkg = sh(script: 'npm pack . 2> /dev/null | tail -n 1', returnStdout: true).trim()
 
               // Push to Artifactory
-              paasArtifactory.push apiKey: env.ARTIFACTORY_API_KEY,
+              def success = paasArtifactory.push apiKey: env.ARTIFACTORY_API_KEY,
                   repo: "${env.ARTIFACTORY_REPO}",
                   source: pkg,
                   destination: "react-slick/-/${pkg}"
+                  
+              if (!success) {
+                error "<${env.BUILD_URL}|#${env.BUILD_TAG}> - [${node_package.name}] Error publishing ${node_package.name}"
+              }
 
             // Note:  We are skiping the use of the tagging API on this repository, since it is a fork
           }
