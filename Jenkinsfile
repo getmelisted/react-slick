@@ -55,15 +55,16 @@ pipeline {
             [path: "/secret/sweetiq-sls/artifactory/API_KEY", keys: ['API_KEY': 'ARTIFACTORY_API_KEY']]
           ]) {
               def node_package = readJSON file: 'package.json'
-              echo "repo_package_version:${repo_package_version}"
+
               try {
                 def repo_package_version = sh(script: "npm view --registry=${env.NPM_REGISTRY_URL} ${node_package.name} dist-tags.latest", returnStdout: true).trim()
+                echo "repo_package_version:${repo_package_version}"
                 if (repo_package_version == node_package.version) {
-                env.FAILURE_MESSAGE = "<${env.BUILD_URL}|#${env.BUILD_TAG}> - [${node_package.name}] node_package.version:${node_package.version} already exists in npm repo as repo_package_version:${repo_package_version}. update the version number in package.json"
-                error env.FAILURE_MESSAGE
+                  env.FAILURE_MESSAGE = "<${env.BUILD_URL}|#${env.BUILD_TAG}> - [${node_package.name}] node_package.version:${node_package.version} already exists in npm repo as repo_package_version:${repo_package_version}. update the version number in package.json"
+                  error env.FAILURE_MESSAGE
                 }
               } catch(Exception e) {
-                sh "echo '${env.NODE_PACKAGE_NAME} could not be found, most likely the first time it is being pushed to artifactory'"
+                sh "echo '${node_package.name} could not be found, most likely the first time it is being pushed to artifactory'"
               }
               def pkg = sh(script: 'npm pack .', returnStdout: true).trim()
 
@@ -80,14 +81,16 @@ pipeline {
       post {
         success {
           script {
+            def node_package = readJSON file: 'package.json'
             slackSend channel: '#jenkins',
               color: 'good',
-              message: "<${env.BUILD_URL}|#${env.BUILD_TAG}> - [${env.NODE_PACKAGE_NAME}] https://artifactory.gannettdigital.com/artifactory/${env.ARTIFACTORY_REPO}/${env.NODE_PACKAGE_NAME}:${env.NODE_PACKAGE_VERSION} Successfully published ${env.NODE_PACKAGE_NAME}!"
+              message: "<${env.BUILD_URL}|#${env.BUILD_TAG}> - [${node_package.name}] https://artifactory.gannettdigital.com/artifactory/${env.ARTIFACTORY_REPO}/${node_package.name}:${node_package.version} Successfully published ${node_package.name}!"
           }
         }
         failure {
           script {
-            env.FAILURE_MESSAGE = "<${env.BUILD_URL}|#${env.BUILD_TAG}> - [${env.NODE_PACKAGE_NAME}] https://artifactory.gannettdigital.com/artifactory/${env.ARTIFACTORY_REPO}/${env.NODE_PACKAGE_NAME}:${env.NODE_PACKAGE_VERSION} Failed to publish ${env.NODE_PACKAGE_NAME} :sob:"
+            def node_package = readJSON file: 'package.json'
+            env.FAILURE_MESSAGE = "<${env.BUILD_URL}|#${env.BUILD_TAG}> - [${node_package.name}] https://artifactory.gannettdigital.com/artifactory/${env.ARTIFACTORY_REPO}/${node_package.name}:${node_package.version} Failed to publish ${node_package.name} :sob:"
           }
         }
       }
