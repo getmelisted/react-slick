@@ -55,7 +55,7 @@ pipeline {
             [path: "/secret/sweetiq-sls/artifactory/API_KEY", keys: ['API_KEY': 'ARTIFACTORY_API_KEY']]
           ]) {
               def node_package = readJSON file: 'package.json'
-
+              
               try {
                 def repo_package_version = sh(script: "npm view --registry=${env.NPM_REGISTRY_URL} ${node_package.name} dist-tags.latest", returnStdout: true).trim()
                 echo "repo_package_version:${repo_package_version}"
@@ -73,11 +73,10 @@ pipeline {
                   repo: "${env.ARTIFACTORY_REPO}",
                   source: pkg,
                   destination: "react-slick/-/${pkg}"
-                  
+
               if (!success) {
                 error "<${env.BUILD_URL}|#${env.BUILD_TAG}> - [${node_package.name}] Error publishing ${node_package.name}"
               }
-
             // Note:  We are skiping the use of the tagging API on this repository, since it is a fork
           }
         }
