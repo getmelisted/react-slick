@@ -13,6 +13,8 @@ LICENSE
 webpack.config.dist.js
 webpack.config.js
 ISSUE_TEMPLATE.md
+
+# The following  files were added to .npmignore due to differences in this fork's publish process
 Jenkinsfile
 CONTRIBUTING.markdown
 CONTRIBUTING.md
